@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodPal.Delivery.Messages",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodPal.Delivery.Mappers", "FoodPal.Delivery.Mappers\FoodPal.Delivery.Mappers.csproj", "{F1EADF4A-87C9-4A0C-8754-F4D916D6500D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodPal.Delivery.Validations", "FoodPal.Delivery.Validations\FoodPal.Delivery.Validations.csproj", "{5535DC43-8389-444C-8498-D2E03E759727}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodPal.Delivery.Validations", "FoodPal.Delivery.Validations\FoodPal.Delivery.Validations.csproj", "{5535DC43-8389-444C-8498-D2E03E759727}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodPal.Contracts", "..\..\..\FoodPal\FoodPal.Notifications\FoodPal.Notifications\FoodPal.Contracts\FoodPal.Contracts.csproj", "{3911111A-1364-45E4-B4DB-DA67B475BBC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{5535DC43-8389-444C-8498-D2E03E759727}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5535DC43-8389-444C-8498-D2E03E759727}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5535DC43-8389-444C-8498-D2E03E759727}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3911111A-1364-45E4-B4DB-DA67B475BBC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3911111A-1364-45E4-B4DB-DA67B475BBC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3911111A-1364-45E4-B4DB-DA67B475BBC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3911111A-1364-45E4-B4DB-DA67B475BBC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

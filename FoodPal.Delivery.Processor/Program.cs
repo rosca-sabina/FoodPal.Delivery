@@ -55,10 +55,13 @@ namespace FoodPal.Delivery.Processor
             services.AddMassTransit(configuration =>
             {
                 // configuration.AddConsumer<CreateNewUserConsumer>();
+                configuration.SetKebabCaseEndpointNameFormatter();
 
                 configuration.UsingAzureServiceBus((context, config) =>
                 {
                     config.Host(serviceBusHost);
+
+                    config.ConfigureEndpoints(context);
 
                     config.ReceiveEndpoint("users-queue", e =>
                     {

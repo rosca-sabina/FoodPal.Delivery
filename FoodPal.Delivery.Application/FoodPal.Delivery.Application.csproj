@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\FoodPal\FoodPal.Notifications\FoodPal.Notifications\FoodPal.Contracts\FoodPal.Contracts.csproj" />
     <ProjectReference Include="..\FoodPal.Delivery.Data\FoodPal.Delivery.Data.csproj" />
     <ProjectReference Include="..\FoodPal.Delivery.DTOs\FoodPal.Delivery.DTOs.csproj" />
   </ItemGroup>

@@ -1,8 +1,10 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
+using FoodPal.Contracts;
 using FoodPal.Delivery.Application.Commands;
 using FoodPal.Delivery.Data.Abstractions;
 using FoodPal.Delivery.Enums;
+using FoodPal.Notifications.Common.Enums;
+using MassTransit;
 using MediatR;
 using System;
 using System.Threading;
@@ -14,12 +16,16 @@ namespace FoodPal.Delivery.Application.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Models.Delivery> _deliveryRepository;
+        private readonly IRepository<Models.User> _userRepository;
         private readonly IValidator<CompleteDeliveryCommand> _validator;
-        public CompleteDeliveryHandler(IUnitOfWork unitOfWork, IValidator<CompleteDeliveryCommand> validator)
+        private readonly IPublishEndpoint _publishEndpoint;
+        public CompleteDeliveryHandler(IUnitOfWork unitOfWork, IValidator<CompleteDeliveryCommand> validator, IPublishEndpoint publishEndpoint)
         {
             _unitOfWork = unitOfWork;
             _deliveryRepository = _unitOfWork.GetRepository<Models.Delivery>();
+            _userRepository = _unitOfWork.GetRepository<Models.User>();
             _validator = validator;
+            _publishEndpoint = publishEndpoint;
         }
         public async Task<bool> Handle(CompleteDeliveryCommand request, CancellationToken cancellationToken)
         {
@@ -34,7 +40,22 @@ namespace FoodPal.Delivery.Application.Handlers
             deliveryModel.Status = DeliveryStatus.Completed;
             deliveryModel.ModifiedAt = DateTimeOffset.Now;
 
-            return await _unitOfWork.SaveChangesAsync();
+            var saved =  await _unitOfWork.SaveChangesAsync();
+
+            var userModel = await _userRepository.FindByIdAsync(deliveryModel.UserId);
+            await _publishEndpoint.Publish<INewNotificationAdded>(new
+            {
+                Title = "Delivery Completed",
+                Message = "Delivery Completed",
+                UserId = userModel.Id,
+                CreatedBy = $"{userModel.FirstName} {userModel.LastName}",
+                ModifiedBy = $"{userModel.FirstName} {userModel.LastName}",
+                Type = NotificationTypeEnum.InApp,
+                Status = NotificationStatusEnum.Created
+            });
+
+
+            return saved;
         }
     }
 }
