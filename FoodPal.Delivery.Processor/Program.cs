@@ -21,7 +21,7 @@ namespace FoodPal.Delivery.Processor
         {
             await Host
                 .CreateDefaultBuilder(args)
-                .UseDefaultServiceProvider(options => options.ValidateScopes = false)
+                //.UseDefaultServiceProvider(options => options.ValidateScopes = false)
                 .ConfigureServices(ConfigureServices)
                 .RunConsoleAsync();
         }
@@ -44,17 +44,22 @@ namespace FoodPal.Delivery.Processor
             services.AddDataAccessConfiguration(hostBuilder.Configuration);
 
             // Consumers
-            services.AddScoped<CreateNewUserConsumer>();
+            /*services.AddScoped<CreateNewUserConsumer>();
             services.AddScoped<UpdateUserConsumer>();
             services.AddScoped<CreateNewDeliveryConsumer>();
             services.AddScoped<CompleteDeliveryConsumer>();
-            services.AddScoped<GetDeliveriesConsumer>();
+            services.AddScoped<GetDeliveriesConsumer>();*/
 
             // MassTransit
             string serviceBusHost = hostBuilder.Configuration.GetSection("MessageBroker").GetValue<string>("ServiceBusHost");
             services.AddMassTransit(configuration =>
             {
-                // configuration.AddConsumer<CreateNewUserConsumer>();
+                configuration.AddConsumer<CreateNewUserConsumer>();
+                configuration.AddConsumer<UpdateUserConsumer>();
+                configuration.AddConsumer<CreateNewDeliveryConsumer>();
+                configuration.AddConsumer<CompleteDeliveryConsumer>();
+                configuration.AddConsumer<GetDeliveriesConsumer>();
+
                 configuration.SetKebabCaseEndpointNameFormatter();
 
                 configuration.UsingAzureServiceBus((context, config) =>
@@ -65,15 +70,20 @@ namespace FoodPal.Delivery.Processor
 
                     config.ReceiveEndpoint("users-queue", e =>
                     {
-                        e.Consumer(() => context.GetService<CreateNewUserConsumer>());
-                        e.Consumer(() => context.GetService<UpdateUserConsumer>());
+                        /*e.Consumer(() => context.GetService<CreateNewUserConsumer>());
+                        e.Consumer(() => context.GetService<UpdateUserConsumer>());*/
+                        e.Consumer<CreateNewUserConsumer>(context);
+                        e.Consumer<UpdateUserConsumer>(context);
                     });
 
                     config.ReceiveEndpoint("delivery-queue", e =>
                     {
-                        e.Consumer(() => context.GetService<CreateNewDeliveryConsumer>());
+                        /*e.Consumer(() => context.GetService<CreateNewDeliveryConsumer>());
                         e.Consumer(() => context.GetService<CompleteDeliveryConsumer>());
-                        e.Consumer(() => context.GetService<GetDeliveriesConsumer>());
+                        e.Consumer(() => context.GetService<GetDeliveriesConsumer>());*/
+                        e.Consumer<CreateNewDeliveryConsumer>(context);
+                        e.Consumer<CompleteDeliveryConsumer>(context);
+                        e.Consumer<GetDeliveriesConsumer>(context);
                     });
                 });
             });
